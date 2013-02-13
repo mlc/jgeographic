@@ -1,2 +1,25 @@
 apply plugin: 'java'
+apply plugin: 'ivy-publish'
+
 version = '0.1-SNAPSHOT'
+group = 'com.github.mlc.jgeographic'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+publishing {
+    publications {
+        ivy {
+            descriptor {
+                withXml {
+
+                }
+            }
+        }
+    }
+}
