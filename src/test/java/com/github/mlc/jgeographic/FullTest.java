@@ -3,8 +3,13 @@ package com.github.mlc.jgeographic;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 import org.junit.Before;
@@ -15,21 +20,29 @@ import static org.junit.Assert.assertEquals;
 
 public class FullTest {
     private static class TestPosition {
+        private static final Splitter SPACE_SPLITTER = Splitter.on(CharMatcher.BREAKING_WHITESPACE).omitEmptyStrings();
         public final double lat1, lon1, azi1, lat2, lon2, azi2, s12, a12, m12, S12;
         public TestPosition(String line) {
-            String[] fields = line.split(" ");
-            lat1 = Double.parseDouble(fields[0]);
-            lon1 = Double.parseDouble(fields[1]);
-            azi1 = Double.parseDouble(fields[2]);
-            lat2 = Double.parseDouble(fields[3]);
-            lon2 = Double.parseDouble(fields[4]);
-            azi2 = Double.parseDouble(fields[5]);
-            s12 = Double.parseDouble(fields[6]);
-            a12 = Double.parseDouble(fields[7]);
-            m12 = Double.parseDouble(fields[8]);
-            S12 = Double.parseDouble(fields[9]);
+            Iterator<String> strs = SPACE_SPLITTER.split(line).iterator();
+            Iterator<Double> doubles = Iterators.transform(strs, new Function<String, Double>() {
+                @Override
+                public Double apply(String input) {
+                    return Double.parseDouble(input);
+                }
+            });
+            lat1 = doubles.next();
+            lon1 = doubles.next();
+            azi1 = doubles.next();
+            lat2 = doubles.next();
+            lon2 = doubles.next();
+            azi2 = doubles.next();
+            s12 = doubles.next();
+            a12 = doubles.next();
+            m12 = doubles.next();
+            S12 = doubles.next();
         }
     }
+
     private static List<TestPosition> data;
     private Geodesic geod;
 
